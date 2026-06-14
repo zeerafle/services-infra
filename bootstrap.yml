@@ -1,0 +1,48 @@
+---
+- name: Bootstrap Fresh VPS Host
+  hosts: webservers
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache if needed
+      apt: update_cache=yes cache_valid_time=3600
+      when: ansible_facts["os_family"] == 'Debian'
+
+  tasks:
+    - name: Install required baselines packages
+      apt:
+        name:
+          - curl
+          - git
+          - ufw
+        state: present
+
+    - name: Set default firewall policies
+      ufw:
+        direction: "{{ item.direction }}"
+        policy: "{{ item.policy }}"
+      loop:
+        - { direction: 'incoming', policy: 'deny' }
+        - { direction: 'outgoing', policy: 'allow' }
+
+    - name: Allow SSH traffic securely
+      ufw:
+        rule: allow
+        port: '22'
+        proto: tcp
+
+    - name: Allow HTTP and HTTPS traffic for Caddy
+      ufw:
+        rule: allow
+        port: "{{ item }}"
+        proto: tcp
+      with_items:
+        - '80'
+        - '443'
+
+    - name: Enable UFW firewall
+      ufw: state=enabled
+
+    - name: Install and configure docker engine
+      include_tasks:
+        file: tasks/docker-install.yml
