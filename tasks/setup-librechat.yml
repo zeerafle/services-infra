@@ -1,0 +1,33 @@
+---
+- name: Ensure LibreChat directory exists
+  file:
+    path: /opt/services/librechat
+    state: directory
+    mode: '0755'
+
+- name: Clone LibreChat repository from GitHub
+  git:
+    repo: https://github.com/danny-avila/LibreChat.git
+    dest: /opt/services/librechat
+    version: main
+    force: yes
+
+- name: Copy static LibreChat configs
+  copy:
+    src: "files/librechat/{{ item }}"
+    dest: "/opt/services/librechat/{{ item }}"
+  with_items:
+    - docker-compose.override.yml
+    - librechat.yaml
+
+- name: Inject the configured .env file
+  template:
+    src: templates/librechat.env.j2
+    dest: /opt/services/librechat/.env
+    mode: '0600'
+
+- name: Ensure LibreChat stack is running
+  community.docker.docker_compose_v2:
+    project_src: /opt/services/librechat
+    state: present
+    pull: always

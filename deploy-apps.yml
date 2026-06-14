@@ -1,0 +1,17 @@
+---
+- name: Deploy Application Stack
+  hosts: webservers
+  become: true
+
+  tasks:
+    - name: Deploy TREK app
+      include_tasks:
+        file: tasks/setup-trek.yml
+
+    - name: Deploy LibreChat app
+      include_tasks:
+        file: tasks/setup-librechat.yml
+
+    - name: Deploy Typesense app
+      include_tasks:
+        file: tasks/setup-typesense.yml

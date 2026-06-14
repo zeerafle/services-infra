@@ -1,0 +1,23 @@
+---
+- name: Ensure typesense directory and typesense-data subdirectory exists
+  file:
+    path: /opt/services/typesense/typesense-data
+    state: directory
+    mode: '0755'
+
+- name: Copy the compose file
+  copy:
+    src: files/typesense/docker-compose.yml
+    dest: /opt/services/typesense/docker-compose.yml
+
+- name: Inject the configured .env file
+  template:
+    src: templates/typesense.env.j2
+    dest: /opt/services/typesense/.env
+    mode: '0600'
+
+- name: Ensure Typesense Docker Compose stack is running
+  community.docker.docker_compose_v2:
+    project_src: /opt/services/typesense
+    state: present
+    pull: always
