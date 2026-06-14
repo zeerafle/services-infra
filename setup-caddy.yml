@@ -1,0 +1,33 @@
+---
+- name: Centralize Caddy Proxy
+  hosts: webservers
+  become: true
+
+  handlers:
+    - name: reload caddy
+      command: >
+        docker exec caddy_proxy caddy reload --config /etc/caddy/Caddyfile
+
+  tasks:
+    - name: Ensure /opt/caddy directory exists
+      file:
+        path: /opt/caddy
+        state: directory
+        mode: '0755'
+
+    - name: Copy Caddy docker-compose file
+      copy:
+        src: files/docker-compose.caddy.yml
+        dest: /opt/caddy/docker-compose.yml
+
+    - name: Template the master Caddyfile
+      template:
+        src: templates/Caddyfile.j2
+        dest: /opt/caddy/Caddyfile
+      notify: reload caddy
+
+    - name: Ensure Caddy container is running
+      community.docker.docker_compose_v2:
+        project_src: /opt/caddy
+        state: present
+        pull: always
