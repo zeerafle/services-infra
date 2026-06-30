@@ -20,6 +20,12 @@
         src: files/docker-compose.caddy.yml
         dest: /opt/caddy/docker-compose.yml
 
+    - name: Ensure the shared external overlay network exists
+      docker_network:
+        name: webnet
+        state: present
+        driver: bridge
+
     - name: Template the master Caddyfile
       template:
         src: templates/Caddyfile.j2

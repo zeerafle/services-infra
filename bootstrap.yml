@@ -3,6 +3,11 @@
   hosts: webservers
   become: true
 
+  handlers:
+    - name: reload ufw
+      community.general.ufw:
+        state: reloaded
+
   pre_tasks:
     - name: Update apt cache if needed
       apt: update_cache=yes cache_valid_time=3600
@@ -15,7 +20,19 @@
           - curl
           - git
           - ufw
+          - apt-transport-https
+          - ca-certificates
+          - gnupg
+          - lsb-release
         state: present
+
+    - name: Ensure UFW routes forwarded traffic (Fixes Docker routing)
+      lineinfile:
+        path: /etc/default/ufw
+        regexp: '^DEFAULT_FORWARD_POLICY='
+        line: 'DEFAULT_FORWARD_POLICY="ACCEPT"'
+        state: present
+      notify: reload ufw
 
     - name: Set default firewall policies
       ufw:

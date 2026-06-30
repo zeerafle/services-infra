@@ -26,6 +26,13 @@
     dest: /opt/services/librechat/.env
     mode: '0600'
 
+- name: Clone alex-paper-search-mcp repo
+  git:
+    repo: https://github.com/LeoGitGuy/alex-paper-search-mcp.git
+    dest: /opt/services/alex-paper-search-mcp
+    version: main
+    force: yes
+
 - name: Ensure LibreChat stack is running
   community.docker.docker_compose_v2:
     project_src: /opt/services/librechat
