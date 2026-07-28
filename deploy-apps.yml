@@ -15,3 +15,7 @@
     - name: Deploy Typesense app
       include_tasks:
         file: tasks/setup-typesense.yml
+
+    - name: Deploy Actual Budget app
+      include_tasks:
+        file: tasks/setup-actual.yml

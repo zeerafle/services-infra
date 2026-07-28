@@ -1,0 +1,15 @@
+services:
+  actual:
+    image: actualbudget/actual-server:latest
+    container_name: actual
+    restart: unless-stopped
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./data:/data
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    external: true

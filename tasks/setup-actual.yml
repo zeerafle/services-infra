@@ -1,0 +1,17 @@
+---
+- name: Ensure Actual Budget data directory exists
+  file:
+    path: /opt/services/actual/data
+    state: directory
+    mode: '0755'
+
+- name: Copy the Actual Budget docker-compose file
+  copy:
+    src: files/actual/docker-compose.yml
+    dest: /opt/services/actual/docker-compose.yml
+
+- name: Ensure Actual Budget Docker Compose stack is running
+  community.docker.docker_compose_v2:
+    project_src: /opt/services/actual
+    state: present
+    pull: always
