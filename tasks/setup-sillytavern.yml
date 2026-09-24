@@ -1,0 +1,23 @@
+---
+- name: Ensure SillyTavern directory exists
+  file:
+    path: /opt/services/sillytavern
+    state: directory
+    mode: '0755'
+
+- name: Copy the compose file
+  copy:
+    src: files/sillytavern/docker-compose.yml
+    dest: /opt/services/sillytavern/docker-compose.yml
+
+- name: Inject the configured .env file
+  template:
+    src: templates/sillytavern.env.j2
+    dest: /opt/services/sillytavern/.env
+    mode: '0600'
+
+- name: Ensure SillyTavern Docker Compose stack is running
+  community.docker.docker_compose_v2:
+    project_src: /opt/services/sillytavern
+    state: present
+    pull: always

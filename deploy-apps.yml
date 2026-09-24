@@ -8,9 +8,9 @@
       include_tasks:
         file: tasks/setup-trek.yml
 
-    - name: Deploy LibreChat app
-      include_tasks:
-        file: tasks/setup-librechat.yml
+    # - name: Deploy LibreChat app
+    #   include_tasks:
+    #     file: tasks/setup-librechat.yml
 
     - name: Deploy Typesense app
       include_tasks:
@@ -19,3 +19,7 @@
     - name: Deploy Actual Budget app
       include_tasks:
         file: tasks/setup-actual.yml
+
+    - name: Deploy SillyTavern app
+      include_tasks:
+        file: tasks/setup-sillytavern.yml
