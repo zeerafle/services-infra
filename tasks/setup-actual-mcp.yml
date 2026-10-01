@@ -1,0 +1,23 @@
+---
+- name: Ensure Actual MCP data directory exists
+  file:
+    path: /opt/services/actual-mcp/data
+    state: directory
+    mode: '0755'
+
+- name: Copy the Actual MCP docker-compose file
+  copy:
+    src: files/actual-mcp/docker-compose.yml
+    dest: /opt/services/actual-mcp/docker-compose.yml
+
+- name: Inject the configured .env file
+  template:
+    src: templates/actual-mcp.env.j2
+    dest: /opt/services/actual-mcp/.env
+    mode: '0600'
+
+- name: Ensure Actual MCP Docker Compose stack is running
+  community.docker.docker_compose_v2:
+    project_src: /opt/services/actual-mcp
+    state: present
+    pull: always

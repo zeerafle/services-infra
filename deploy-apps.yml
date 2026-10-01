@@ -20,6 +20,10 @@
       include_tasks:
         file: tasks/setup-actual.yml
 
+    - name: Deploy Actual MCP server
+      include_tasks:
+        file: tasks/setup-actual-mcp.yml
+
     - name: Deploy SillyTavern app
       include_tasks:
         file: tasks/setup-sillytavern.yml

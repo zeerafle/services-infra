@@ -11,7 +11,20 @@ zeerafle-chat.duckdns.org {
 }
 
 zeerafle-budget.duckdns.org {
-    reverse_proxy actual:5006
+    # MCP server behind a secret path (Claude connectors can't send auth headers)
+    handle /{{ vault_actual_mcp_path }}/* {
+        uri strip_prefix /{{ vault_actual_mcp_path }}
+        reverse_proxy actual-mcp:3000
+    }
+
+    # Actual's SPA fallback would answer OAuth discovery probes with HTML
+    handle /.well-known/* {
+        respond 404
+    }
+
+    handle {
+        reverse_proxy actual:5006
+    }
 }
 
 zeerafle-tavern.duckdns.org {

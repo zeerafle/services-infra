@@ -4,9 +4,10 @@
   become: true
 
   handlers:
-    - name: reload caddy
-      command: >
-        docker exec caddy_proxy caddy reload --config /etc/caddy/Caddyfile
+    # restart, not reload: template replaces the file's inode, so the single-file
+    # bind mount keeps serving the old Caddyfile until the container is recreated
+    - name: restart caddy
+      command: docker restart caddy_proxy
 
   tasks:
     - name: Ensure /opt/caddy directory exists
@@ -30,7 +31,7 @@
       template:
         src: templates/Caddyfile.j2
         dest: /opt/caddy/Caddyfile
-      notify: reload caddy
+      notify: restart caddy
 
     - name: Ensure Caddy container is running
       community.docker.docker_compose_v2:

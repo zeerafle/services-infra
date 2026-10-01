@@ -1,0 +1,15 @@
+services:
+  actual-mcp:
+    image: sstefanov/actual-mcp:latest
+    container_name: actual-mcp
+    restart: unless-stopped
+    command: ["--sse", "--enable-write"]
+    env_file: .env
+    volumes:
+      - ./data:/data
+    networks:
+      - webnet
+
+networks:
+  webnet:
+    external: true
