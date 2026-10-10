@@ -6,9 +6,9 @@ zeerafle-trek.duckdns.org {
     reverse_proxy trek:3000
 }
 
-zeerafle-chat.duckdns.org {
-    reverse_proxy api:3080
-}
+# zeerafle-chat.duckdns.org {
+#    reverse_proxy api:3080
+# }
 
 zeerafle-budget.duckdns.org {
     # MCP server behind a secret path (Claude connectors can't send auth headers)
@@ -29,4 +29,8 @@ zeerafle-budget.duckdns.org {
 
 zeerafle-tavern.duckdns.org {
     reverse_proxy sillytavern:8000
+}
+
+zeerafle-llm.duckdns.org {
+    reverse_proxy freellmapi:3001
 }

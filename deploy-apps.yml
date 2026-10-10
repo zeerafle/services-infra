@@ -27,3 +27,7 @@
     - name: Deploy SillyTavern app
       include_tasks:
         file: tasks/setup-sillytavern.yml
+
+    - name: Deploy FreeLLMAPI app
+      include_tasks:
+        file: tasks/setup-freellmapi.yml

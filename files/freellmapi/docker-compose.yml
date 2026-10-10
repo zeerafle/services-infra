@@ -1,0 +1,21 @@
+services:
+  freellmapi:
+    image: ghcr.io/tashfeenahmed/freellmapi:latest
+    container_name: freellmapi
+    env_file: .env
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+    volumes:
+      - freellmapi-data:/app/server/data
+    mem_limit: 400m
+    restart: unless-stopped
+    networks:
+      - webnet
+
+volumes:
+  freellmapi-data:
+
+networks:
+  webnet:
+    external: true

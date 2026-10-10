@@ -1,0 +1,23 @@
+---
+- name: Ensure FreeLLMAPI directory exists
+  file:
+    path: /opt/services/freellmapi
+    state: directory
+    mode: '0755'
+
+- name: Copy the compose file
+  copy:
+    src: files/freellmapi/docker-compose.yml
+    dest: /opt/services/freellmapi/docker-compose.yml
+
+- name: Inject the configured .env file
+  template:
+    src: templates/freellmapi.env.j2
+    dest: /opt/services/freellmapi/.env
+    mode: '0600'
+
+- name: Ensure FreeLLMAPI Docker Compose stack is running
+  community.docker.docker_compose_v2:
+    project_src: /opt/services/freellmapi
+    state: present
+    pull: always
